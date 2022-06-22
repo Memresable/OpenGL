@@ -84,23 +84,50 @@ struct Shader
 		glDeleteShader(fragment);
 	}
 
-	void uniformLocation(float value) { int vRight = glGetUniformLocation(ID, "rightside"); }
+	void uniformLocation(float value)
+	{
+		int vRight = glGetUniformLocation(ID, "rightside");
+	}
 
-	void p_use() { glUseProgram(ID); }
+	void p_use()
+	{
+		glUseProgram(ID);
+	}
 
-	void p_delete() { glDeleteProgram(ID); }
+	void p_delete()
+	{
+		glDeleteProgram(ID);
+	}
 
-	void setBool(const std::string& name, bool value) const { glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); }
+	void setBool(const std::string& name, bool value) const
+	{
+		glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+	}
 
-	void setFloat(const std::string& name, float value) const { glUniform1f(glGetUniformLocation(ID, name.c_str()), value); }
+	void setFloat(const std::string& name, float value) const
+	{
+		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	}
 
-	void setInt(const std::string& name, int value) const { glUniform1i(glGetUniformLocation(ID, name.c_str()), value); }
+	void setInt(const std::string& name, int value) const
+	{
+		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	}
 
-	void vec3(const std::string& name, float x, float y, float z) const { glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z); }
+	void vec3(const std::string& name, float x, float y, float z) const
+	{
+		glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+	}
 
-	void vec3(const std::string& name, glm::vec3 &value) const { glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]); }
+	void vec3(const std::string& name, glm::vec3 &value) const
+	{
+		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
 
-	void setVec3(const std::string& name, glm::vec3 &value) const { glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]); }
+	void setVec3(const std::string& name, glm::vec3 &value) const
+	{
+		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
 
 	void transformLoc(const std::string& name, glm::mat4 value)
 	{

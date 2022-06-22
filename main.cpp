@@ -81,19 +81,45 @@ int main(void)
 
 void proccessInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
 
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
 
     float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame; lastFrame = currentFrame;
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
     const float cameraSpe = 2.5f * deltaTime;
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { cameraPos += cameraSpe * cameraFro; }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { cameraPos -= cameraSpe * cameraFro; }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { cameraPos -= glm::normalize(glm::cross(cameraFro, cameraUp)) * cameraSpe; }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { cameraPos += glm::normalize(glm::cross(cameraFro, cameraUp)) * cameraSpe; }
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        cameraPos += cameraSpe * cameraFro;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        cameraPos -= cameraSpe * cameraFro;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        cameraPos -= glm::normalize(glm::cross(cameraFro, cameraUp)) * cameraSpe;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        cameraPos += glm::normalize(glm::cross(cameraFro, cameraUp)) * cameraSpe;
+    }
 }
 
 //void load_texture(const char* t_name, const char* n_data)
@@ -113,4 +139,7 @@ void proccessInput(GLFWwindow* window)
 //    stbi_image_free(data);
 //}
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); }
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
