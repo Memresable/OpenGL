@@ -1,0 +1,101 @@
+LearnOpenGL (12) (Coordinate Systems)
+
+The most important Model Matrices are: Model, View, Projection.
+
+Transforming to NDC is accomplished in five steps (with How they are done (in Short!)):
+/
+1 - Local World Space (or Object Space, Like the Container Object)
+2 - World Space (Transform the Local Coordiantes to the World Coordinates, which are Coordinates -
+  - in Respect to the Larger World)
+3 - View Space (or Eye Space) (Transforming the World Coordinates to the Camera's or Viewer's -
+  - Field Of View (or FOV))
+4 - Clip Space (In here we clip the View Space to the NDC's Range: from -1 to 1, and determine -
+  - which vertices will end up on the NDC's Range (or the Camera), Projection to Clip Space -
+  - can add Perspective IF using Perspective Projection)
+5 - Screen Space (We then port Clip Space values to the glViewport function to show Frames on our -
+  - Screen!)
+/
+
+And In More Detail:
+/
+1 - Local Space
+
+    is the Coordinate Space that is local to your Object, when you create an Object -
+ - In Blender (For Example) your default Object's Local Coordinates are (0, 0, 0) as their Initial -
+ - Position, All the vertices in your module in your Object are therfore: Local Space.
+
+2 - World Space
+
+    is basically this: The Coordinates of all your "Vertices" Relative to the Game World. -
+ - This is accomplished via the "Model Matrix", The Model Matrix is a Transformation that translates, -
+ - Scales and Rotates your Object to place it in a World at a Location/Orientation They Belong to.
+
+3 - View Space
+
+    is the result of what People usually refer to as Camera in OpenGL, The View Space is -
+ - The Result of Transforming your World-Space Coordinates to Coordinates that are in Front of the -
+ - User's View. This is Usually accomplished via Combination of Translations and Rotations to -
+ - Translate/Rotate the scene so that certain Items are Transformed to the Front of the camera. The -
+ - Combined Translations are stored via the "View Matrix" that transforms the World Coordinates to -
+ - View Space. (In the Camera Chapter, This will be shown how it is implemented!)
+
+4 - Clip Space
+
+    To Transform Vertex Coordinates from view space to clip space we define a so called -
+ - "Projection Matrix" that specifies a range of coordinates between -1000 and 1000 in each dimension. -
+ - The Projection Matrix then transforms Coordinates witihin these specified ranges to NDC (-1 and 1) -
+ - All Coordinates outside of this Range will not be mapped, and thefore get clipped(!). Within this -
+ - Range we specified in the Projection Matrix, a Coordinate of(1250, 750, 250) is Clipped because X -
+ - was Outside of the range
+
+    This "Viewing Box" a projection matrix creates is called "frustum" and each coordinate that ends -
+ - up Inside this "frusutm" will end up on the user's screen. The total Process to convert coordinates -
+ - witihin a specified range to NDC that can be easily mapped to 2D View-Space Coordinates is called -
+ - "Projection" since the projection matrix "Projects" 3D Coordinates to the "Easy-To-Map" 2D NDCs.
+
+    Once All the Vertices are Transformed to Clip Space a final Operation called Perspective Divison -
+ - is performed where we divide the X, Y and Z Components of the Position vectors by the vector's -
+ - W (chungus!) component; perspective divison is what transforms the 4D clip space coordinates to 3D -
+ - NDCs, This step is performed automatically in the Vertex Shader step.
+
+    It is after this stage where the resulting coordinates are mapped to screen coordinates (using the -
+ - Settings of glViewport) and turned into Fragments.
+
+    The projection matrix is to transform View Coordinates to Clip Coordinates usually takes two -
+ - different forms, where each defines it's unique frustum, We can either create an Orthographic -
+ - Perspective or a Perspective Projection Matrix.
+
+[1]  Orthographic basically is almost like a container face viewer, it's bad for what we want.
+
+[2]  Perspective Projection is Perfect. We use "Perspective Projection Matrix" in this case to -
+  - achieve this effect, The Projection Matrix "maps" a given frustum range to clip space, but also -
+  - manipulates the W (chungus!) value of each Vertex coordinate in such a way that the further away -
+  - away a Vertex Coordinate is from the viewer, the Higher the W (chungus!) becomes. Once the -
+  - Coordinates are transformed to Clip Space, they are in the range of -W to W (chungus!) -
+  - (anything outside this range is clipped). OpenGL requires that the visible coordinates fall -
+  - between the NDC's Range as the final Vertex Shader Output, thus once the coordinates are -
+  - in Clip Space, Perspective Divison is Applied to the Clip Space Coordinates:
+
+          (x/w)
+    out = (y/w)
+          (z/w)
+
+     Each component of the Vertex Coordinate is divided by its W (chungus!) component giving smaller -
+  - Vertex Coordinates the further away a vertex is from the viewer. This is another reason why the W -
+  - (chungus!) component is Important, since it helps us with perspective projection, The Resulting -
+  - Coordinates are then in NDC.
+
+     A Perspective Projection Matrix can be created in GLM as follows:
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width/(float)height, 0.1f, 100.0f);
+
+     Now What glm::perspective(); again is create a large "frustum" that defines the visible space, -
+  - anything outside the frustum will not end up in the Clip Space volume and will thus become -
+  - clipped.
+
+     A perspective frustum can be visualized as a non-uniformly shaped box from where each coordinate -
+  - inside this box will be mapped to a point in Clip Space. (The Image and the rest of the details -
+  - are in the Website)
+/
+
+Putting it All Together:
+    gl_Position = Projection * View * Model * vec4(aPos, 1.0f);
